@@ -1,10 +1,12 @@
 import { Component, input } from '@angular/core';
 import { TaskComponent } from "./task/task.component";
+import { NewTaskComponent } from "./new-task/new-task.component";
+import { type NewTask } from '../shared/models/new-task.model';
 
 @Component({
   selector: 'app-tasks',
   standalone: true,
-  imports: [TaskComponent],
+  imports: [TaskComponent, NewTaskComponent],
   templateUrl: './tasks.component.html',
   styleUrl: './tasks.component.scss'
 })
@@ -13,6 +15,8 @@ export class TasksComponent {
   //Undefined if user is not found in app component
   name = input.required<string>();
   userId = input.required<string>();
+
+  isAddingTask: boolean = false;
 
   dummyTasks = [
     {
@@ -46,5 +50,24 @@ export class TasksComponent {
 
   onCompleteTask(id: string) {
     this.dummyTasks = this.dummyTasks.filter((task) => task.id !== id);
+  }
+
+  onStartAddTask() {
+    this.isAddingTask = true;
+  }
+
+  onCancelAddTask() {
+    this.isAddingTask = false;
+  }
+
+  onAddTask(taskData: NewTask) {
+    this.dummyTasks.push({
+      id: new Date().getTime().toString(),
+      userId: this.userId(),
+      title: taskData.title,
+      summary: taskData.summary,
+      dueDate: taskData.date
+    });
+    this.isAddingTask = false;
   }
 }
