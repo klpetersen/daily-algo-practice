@@ -11,6 +11,7 @@ import { type User } from '../shared/models/user.model';
 export class UserComponent {
 
   user = input.required<User>();
+  selected = input.required<boolean>();
   select = output<string>();
 
   imagePath = computed<string>(() => {
