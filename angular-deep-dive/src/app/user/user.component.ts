@@ -1,4 +1,5 @@
 import { Component, input, computed, output} from '@angular/core';
+import { type User } from '../shared/models/user.model';
 
 @Component({
   selector: 'app-user',
@@ -9,17 +10,15 @@ import { Component, input, computed, output} from '@angular/core';
 })
 export class UserComponent {
 
-  name = input.required<string>();
-  avatar = input.required<string>();
-  id = input.required<string>();
+  user = input.required<User>();
   select = output<string>();
 
   imagePath = computed<string>(() => {
-    return 'assets/users/' + this.avatar();
+    return 'assets/users/' + this.user().avatar;
   })
 
   onSelectedUser(): void {
-    this.select.emit(this.id())
+    this.select.emit(this.user().id)
   }
 
 }
