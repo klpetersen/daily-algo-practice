@@ -1,6 +1,6 @@
-import { Component, output, signal } from '@angular/core';
+import { Component, output, signal, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NewTask } from '../../shared/models/new-task.model';
+import { TasksService } from '../../shared/services/tasks.service';
 
 @Component({
   selector: 'app-new-task',
@@ -11,23 +11,25 @@ import { NewTask } from '../../shared/models/new-task.model';
 })
 export class NewTaskComponent {
 
-  cancel = output<void>();
-  add = output<NewTask>();
+  close = output<void>();
+  userId = input.required<string>();
 
   enteredTitle = signal<string>('');
   enteredSummary = signal<string>('');
   enteredDate = signal<string>('');
 
+  constructor(private tasksService: TasksService) {}
+
   onCancel() {
-    this.cancel.emit();
+    this.close.emit();
   }
 
-  onSubmit() {
-    this.add.emit({
+  onSubmit() {  
+    this.tasksService.addTask({
       title: this.enteredTitle(),
       summary: this.enteredSummary(),
       date: this.enteredDate()
-    })
-  }
-
+    }, this.userId());
+    this.close.emit();
+  };
 }
